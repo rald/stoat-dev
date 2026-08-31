@@ -3,7 +3,6 @@ import stoat
 import sqlite3
 import re
 
-
 class MyClient(stoat.Client):
     __slots__ = ()
 
@@ -25,6 +24,9 @@ class MyClient(stoat.Client):
         if msg.lower().startswith(".kjv"):
 
             cite = msg[5:].lower()
+
+            if cite=="": return
+            
             passages=[]
 
             match = self.pattern.match(cite.strip())
