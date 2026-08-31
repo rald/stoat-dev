@@ -9,7 +9,7 @@ curs=conn.cursor()
 
 
 # Example citation strings
-citations = ["John 3:16", "1 Corinthians 13:4-7", "Genesis 1:1"]
+citations = ["John 3:16"]
 
 # Regex pattern to match book, chapter, start verse, and optional end verse
 pattern = re.compile(
@@ -22,24 +22,28 @@ for citation in citations:
         data = match.groupdict()
         
         # Clean up extra spaces and convert numbers to integers
-        bnam = data["book"].strip()
+        book = data["book"].strip()
         cnum = int(data["chapter"])
         svnum = int(data["start_verse"])
         
         # Use a ternary operator to handle missing end verses safely
-        evnum = int(data["end_verse"]) if data["end_verse"] is not None else None
+        evnum = int(data["end_verse"]) if data["end_verse"] is not None else svnum
 
         curs.execute(f"""
             SELECT 
-                v.id, 
-                b.bnam, 
-                v.cnum, 
-                v.vnum, 
-                v.text
+                b.bnam as BOOK, 
+                v.cnum as CHAPTER, 
+                v.vnum as VERSE, 
+                v.text as TEXT
             FROM verses v
             JOIN books b ON v.bnum = b.bnum
-            WHERE book={bnam} and chapter={cnum} and verse={svnum} <= verse={scnum};
-        """)
+            WHERE BOOK=? and CHAPTER=? and (VERSE >= ? AND VERSE <= ?)
+        """,(book,cnum,svnum,evnum))
+
+        rows = curs.fetchall()
+
+        for row in rows:
+            print(f"{row[0]} {row[1]}:{row[2]} -> {row[3]}\n")
 
 conn.commit()
 conn.close()
