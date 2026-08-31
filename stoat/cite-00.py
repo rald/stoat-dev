@@ -1,10 +1,6 @@
 #!/usr/bin/env python3
 
-import sqlite3
 import re
-
-conn=sqlite3.connect('kjv.db')
-curs=conn.cursor()
 
 # Example citation strings
 citations = ["John 3:16", "1 Corinthians 13:4-7", "Genesis 1:1"]
@@ -27,9 +23,4 @@ for citation in citations:
         # Use a ternary operator to handle missing end verses safely
         data["end_verse"] = int(data["end_verse"]) if data["end_verse"] is not None else None
 
-
-
         print(data)
-
-conn.commit()
-conn.close()
