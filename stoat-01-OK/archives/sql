@@ -1,0 +1,24 @@
+CREATE TABLE `books` (
+    `id` INTEGER PRIMARY KEY AUTOINCREMENT,
+    `bnum` INTEGER,
+    `bnam` TEXT,
+    `bsnm` TEXT
+);
+
+CREATE TABLE `verses` (
+    `id` INTEGER PRIMARY KEY AUTOINCREMENT,
+    `bnum` INTEGER,
+    `cnum` INTEGER,
+    `vnum` INTEGER,
+    `text` TEXT
+);
+
+SELECT 
+    v.id, 
+    b.bnam, 
+    v.cnum, 
+    v.vnum, 
+    v.text
+FROM verses v
+JOIN books b ON v.bnum = b.bnum;
+
